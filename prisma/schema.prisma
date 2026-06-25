@@ -1,0 +1,29 @@
+// Prisma schema for Divination Studio - Production (PostgreSQL)
+// Supports Supabase, Neon, and any PostgreSQL provider
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+/// Records of all divination sessions
+model DivinationRecord {
+  id        String   @id @default(cuid())
+  // Divination method: "meihua" or "xiaoliuren"
+  method    String
+  // User's original question
+  question  String
+  // Full result in JSON format
+  result    String
+  // Timestamp of divination
+  createdAt DateTime @default(now())
+
+  @@index([method])
+  @@index([createdAt])
+  @@map("divination_records")
+}
