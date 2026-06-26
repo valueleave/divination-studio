@@ -9,38 +9,32 @@ import { PRICING_PLANS, formatPrice } from "@/lib/payment";
 export default function BuyPage() {
   const [selectedPlan, setSelectedPlan] = useState<string>("starter");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<{ code: string; turnCount: number } | null>(null);
+  const [result, setResult] = useState<{ code: string; turnCount: number; pending?: boolean } | null>(null);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState("");
+  const [paymentNote, setPaymentNote] = useState("");
 
   const handlePay = async () => {
     setLoading(true);
     setError("");
     try {
-      // 1. Create order
       const res = await fetch("/api/payment/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ planId: selectedPlan }),
+        body: JSON.stringify({ planId: selectedPlan, paymentNote: paymentNote.trim() }),
       });
       const order = await res.json();
-      // 2. Simulate payment (in production, user scans WeChat QR code)
       const simRes = await fetch("/api/payment/simulate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderId: order.orderId }),
+        body: JSON.stringify({ orderId: order.orderId, paymentNote: paymentNote.trim() }),
       });
       const simData = await simRes.json();
-      if (simData.code) {
-        setResult(simData);
-      } else {
-        setError("Payment failed");
-      }
-    } catch (err) {
-      setError("Network error");
-    } finally {
-      setLoading(false);
-    }
+      if (simData.success) {
+        setResult({ code: "", turnCount: simData.turnCount, pending: true });
+      } else setError("Failed to create order");
+    } catch { setError("Network error"); }
+    finally { setLoading(false); }
   };
 
   const copyCode = () => {
@@ -63,15 +57,28 @@ export default function BuyPage() {
           <div className="w-12 h-px bg-gradient-to-r from-transparent via-gold to-transparent mx-auto mt-6" />
         </motion.div>
 
-        {result ? (
+        {(result && result.pending) ? (
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
             <Card className="border-gold/30 subtle-glow text-center">
+              {result && !result.pending ? (
               <CardHeader>
                 <div className="mx-auto w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mb-4">
                   <Check className="w-8 h-8 text-green-400" />
                 </div>
                 <CardTitle className="font-display text-2xl tracking-wider text-gold">Payment Successful</CardTitle>
               </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="mx-auto w-16 h-16 rounded-full bg-yellow-500/20 flex items-center justify-center mb-4">
+                  <svg className="w-8 h-8 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <CardTitle className="font-display text-xl tracking-wider text-yellow-400">Order Submitted</CardTitle>
+                <p className="text-muted-foreground text-sm">Your code ({result.turnCount} turns) will be activated after manual verification of your payment. Please wait within 24 hours.</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ) : result ? (
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
+              <Card className="border-gold/30 subtle-glow text-center">
               <CardContent className="space-y-6">
                 <p className="text-muted-foreground text-sm">Your redemption code ({result.turnCount} turns):</p>
                 <div className="bg-gold/10 border border-gold/30 rounded-lg p-4 flex items-center justify-between gap-4">
@@ -109,13 +116,26 @@ export default function BuyPage() {
             </div>
             {error && <p className="text-red-400 text-sm text-center mb-4">{error}</p>}
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.4 }} className="text-center">
-              <Button size="lg" onClick={handlePay} disabled={loading} className="w-full md:w-auto">
-                {loading ? "Processing..." : "Pay " + formatPrice(plan ? plan.price : 0) + " via WeChat"}
-              </Button>
-              <p className="text-xs text-muted-foreground/60 mt-4 flex items-center justify-center gap-1">
-                <Shield className="w-3 h-3" />
-                Secure payment. Code will be sent via SMS and displayed on screen.
-              </p>
+              <div className="text-center max-w-sm mx-auto">
+              <p className="text-sm text-muted-foreground mb-4">Step 1: Scan with WeChat to pay</p>
+              <div className="bg-white rounded-lg p-4 mb-6 inline-block">
+                <img src="/wechat_qr.jpg" alt="WeChat Pay QR Code" className="w-48 h-48 object-contain" onError={function(e){e.target.style.display="none"}} />
+              </div>
+              <p className="text-xs text-muted-foreground mb-4">Step 2: Enter the name you put in the WeChat transfer note</p>
+              <div className="flex gap-3 mb-4">
+                <input
+                  value={paymentNote}
+                  onChange={function(e){setPaymentNote(e.target.value)}}
+                  onKeyDown={function(e){if(e.key==="Enter")handlePay()}}
+                  placeholder="Your WeChat transfer note"
+                  className="flex-1 h-10 rounded-md border border-input bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-gold/50"
+                />
+                <Button onClick={handlePay} disabled={loading || !paymentNote.trim()}>
+                  {loading ? "Getting..." : "Get Code"}
+                </Button>
+              </div>
+              {error && <p className="text-red-400 text-xs">{error}</p>}
+            </div>
             </motion.div>
           </>
         )}
