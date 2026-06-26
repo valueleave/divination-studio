@@ -34,7 +34,7 @@ export default function HomePage() {
         >
           Hidden Mandate
           <br />
-          <span className="gold-shimmer-text">of Zhou Xiaotong</span>
+          <span className="gold-shimmer-text">Hidden Mandate</span>
         </motion.h1>
 
         {/* 分隔线 */}
