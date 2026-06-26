@@ -16,21 +16,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Order already processed" }, { status: 400 });
     }
     // Simulate payment success
-    const code = generateCode();
     await prisma.paymentOrder.update({
       where: { id: order.id },
-      data: { status: "paid", paidAt: new Date() },
+      data: { status: "pending_verification" },
     });
-    await prisma.redemptionCode.create({
-      data: {
-        code,
-        totalTurns: order.turnCount,
-        usedTurns: 0,
-        status: "active",
-        paymentId: order.id,
-      },
-    });
-    return NextResponse.json({ success: true, code, turnCount: order.turnCount });
+    return NextResponse.json({ success: true, orderId: order.id, turnCount: order.turnCount, message: "Your payment is being reviewed. The code will be activated within 24 hours after manual verification." });
   } catch (error) {
     console.error("Simulate payment error:", error);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
