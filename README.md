@@ -1,4 +1,4 @@
-# Divination Studio of Zhou Xiaotong
+# Hidden Mandate
 
 An elegant web application for traditional Chinese divination, featuring Meihua Yishu (Plum Blossom Divination) and Xiao Liu Ren divination methods.
 
@@ -34,7 +34,7 @@ An elegant web application for traditional Chinese divination, featuring Meihua 
 `ash
 # Clone the repository
 git clone <repo-url>
-cd divination-studio
+cd hidden-mandate
 
 # Install dependencies
 npm install
