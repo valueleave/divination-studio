@@ -18,6 +18,7 @@ export interface XiaoliurenResult {
   month: number;
   day: number;
   shichen: number;
+  minute: number;
 }
 export function getShichen(h: number): number {
   if (h >= 23 || h < 1) return 1;
@@ -44,11 +45,12 @@ export function performXiaoliurenDivination(now: Date): XiaoliurenResult {
   const month = now.getMonth() + 1;
   const day = now.getDate();
   const shichen = getShichen(now.getHours());
+  const min = now.getMinutes();
   const monthPos = cycleFrom(1, month);
   const dayPos = cycleFrom(monthPos, day);
-  const finalPos = cycleFrom(dayPos, shichen);
+  const finalPos = cycleFrom(dayPos, shichen + min);
   const deityData = (xiaoliurenData as any).deities[finalPos.toString()];
-  const timeStr = now.getFullYear() + "年" + month + "月" + day + "日 " + getShichenName(now.getHours());
+  const timeStr = now.getFullYear() + "年" + month + "月" + day + "日 " + getShichenName(now.getHours()) + " " + String(now.getMinutes()).padStart(2,"0") + "分";
   return {
     finalPosition: finalPos,
     deityName: DEITIES[finalPos - 1],
@@ -62,6 +64,7 @@ export function performXiaoliurenDivination(now: Date): XiaoliurenResult {
     month,
     day,
     shichen,
+    minute: min,
   };
 }
 export function getDeityData(position: number): any {
