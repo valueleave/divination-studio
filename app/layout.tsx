@@ -6,19 +6,19 @@ import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
   title: {
-    default: "Divination Studio of Zhou Xiaotong | Traditional Chinese Divination",
-    template: "%s | Divination Studio of Zhou Xiaotong",
+    default: "Hidden Mandate | Traditional Chinese Divination",
+    template: "%s | Hidden Mandate",
   },
   description:
     "Traditional Chinese divination platform offering Meihua Yishu (Plum Blossom Divination) and Xiao Liu Ren divination. Ancient wisdom for modern decisions.",
   keywords: ["\u6885\u82b1\u6613\u6570", "\u5c0f\u516d\u58ec", "\u5360\u535c", "\u6613\u7ecf", "traditional chinese divination", "plum blossom divination"],
-  authors: [{ name: "Divination Studio of Zhou Xiaotong" }],
+  authors: [{ name: "Hidden Mandate" }],
   openGraph: {
-    title: "Divination Studio of Zhou Xiaotong",
-    description: "Ancient Wisdom for Modern Decisions - Traditional Chinese Divination",
+    title: "Hidden Mandate",
+    description: "Decode the Ancient Wisdom - Traditional Chinese Divination",
     type: "website",
     locale: "zh_CN",
-    siteName: "Divination Studio of Zhou Xiaotong",
+    siteName: "Hidden Mandate",
   },
 };
 
@@ -36,10 +36,10 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
-              name: "Divination Studio of Zhou Xiaotong",
+              name: "Hidden Mandate",
               description:
                 "Traditional Chinese divination platform offering Meihua Yishu and Xiao Liu Ren divination services.",
-              url: (process.env.NEXT_PUBLIC_SITE_URL || "https://divination-studio.vercel.app"),
+              url: (process.env.NEXT_PUBLIC_SITE_URL || "https://hidden-mandate.vercel.app"),
             }),
           }}
         />
