@@ -44,6 +44,7 @@ export interface MeihuaResult {
   month: number;
   day: number;
   hour: number;
+  minute: number;
 }
 
 interface HexagramData {
@@ -215,13 +216,14 @@ export function performMeihuaDivination(now: Date): MeihuaResult {
   const month = now.getMonth() + 1; // 1-12
   const day = now.getDate();         // 1-31
   const hour = getShichen(now.getHours()); // 1-12
+  const min = now.getMinutes(); // 0-59
 
   // 计算上卦
   const upperNum = ((year + month + day) % 8) === 0 ? 8 : ((year + month + day) % 8);
   // 计算下卦
-  const lowerNum = ((year + month + day + hour) % 8) === 0 ? 8 : ((year + month + day + hour) % 8);
+  const lowerNum = ((year + month + day + hour + min) % 8) === 0 ? 8 : ((year + month + day + hour + min) % 8);
   // 计算动爻
-  const movingLine = ((year + month + day + hour) % 6) === 0 ? 6 : ((year + month + day + hour) % 6);
+  const movingLine = ((year + month + day + hour + min) % 6) === 0 ? 6 : ((year + month + day + hour + min) % 6);
 
   // 本卦
   const hexNum = calcHexagramNumber(upperNum, lowerNum);
@@ -238,7 +240,7 @@ export function performMeihuaDivination(now: Date): MeihuaResult {
   // 体用生克
   const tiYong = calcTiYong(upperNum, lowerNum, movingLine);
 
-  const timeStr = `${year}年${month}月${day}日 ${getShichenName(now.getHours())}`;
+  const timeStr = `${year}年${month}月${day}日 ${getShichenName(now.getHours())} ${String(now.getMinutes()).padStart(2,"0")}分`;
 
   return {
     originalHexagram: hexNum,
@@ -259,6 +261,7 @@ export function performMeihuaDivination(now: Date): MeihuaResult {
     month,
     day,
     hour,
+    minute: min,
   };
 }
 
