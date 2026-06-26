@@ -6,7 +6,7 @@ import { checkRateLimit, getRateLimitHeaders } from '@/lib/rate-limit';
 
 export async function POST(req: NextRequest) {
   try {
-    const { question } = await req.json();
+    const { question, code: activeCode } = await req.json();
     if (!question || typeof question !== 'string') {
       return NextResponse.json({ error: 'Question is required' }, { status: 400 });
     }
@@ -38,7 +38,11 @@ export async function POST(req: NextRequest) {
       comprehensiveAnalysis: interpretation.comprehensiveAnalysis,
       humanisticReading: interpretation.humanisticReading,
     };
-    const record = await prisma.divinationRecord.create({
+      let codeRecord = null;
+  if (activeCode) {
+    codeRecord = await prisma.redemptionCode.findUnique({ where: { code: activeCode } });
+  }
+  const record = await prisma.divinationRecord.create({
       data: { method: 'xiaoliuren', question, result: JSON.stringify(fullResult), createdAt: now },
     });
     return NextResponse.json({ id: record.id, ...fullResult });
