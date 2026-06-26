@@ -9,20 +9,20 @@ export default function Footer() {
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-gold" />
             <span className="font-display text-sm text-foreground tracking-wider">
-              Divination Studio of Zhou Xiaotong
+              Hidden Mandate
             </span>
           </div>
 
           {/* Center info */}
           <div className="text-center">
             <p className="text-xs text-muted-foreground">
-              Traditional Chinese Divination Research
+              Decode the Ancient Wisdom
             </p>
           </div>
 
           {/* Copyright */}
           <div className="text-xs text-muted-foreground">
-            <p>&copy; 2026 Divination Studio</p>
+            <p>&copy; 2026 Hidden Mandate</p>
           </div>
         </div>
 
