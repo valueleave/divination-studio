@@ -49,7 +49,7 @@ export default function Header() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="font-display text-lg text-foreground tracking-wider"
           >
-            Divination Studio
+            Hidden Mandate
           </motion.span>
         </Link>
 
