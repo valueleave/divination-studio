@@ -32,7 +32,7 @@ export default function HomePage() {
           transition={{ duration: 0.8, delay: 0.3 }}
           className="text-4xl md:text-6xl lg:text-7xl font-display tracking-[0.2em] text-foreground mb-6"
         >
-          Divination Studio
+          Hidden Mandate
           <br />
           <span className="gold-shimmer-text">of Zhou Xiaotong</span>
         </motion.h1>
@@ -52,7 +52,7 @@ export default function HomePage() {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="text-lg md:text-xl text-muted-foreground font-display tracking-wider mb-12"
         >
-          Ancient Wisdom for Modern Decisions
+          Decode the Ancient Wisdom
         </motion.p>
 
         {/* 装饰图标 */}
