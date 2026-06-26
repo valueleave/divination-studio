@@ -1,6 +1,3 @@
-// Prisma schema for Divination Studio - Production (PostgreSQL)
-// Supports Supabase, Neon, and any PostgreSQL provider
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,19 +8,52 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-/// Records of all divination sessions
+// Divination records
 model DivinationRecord {
   id        String   @id @default(cuid())
-  // Divination method: "meihua" or "xiaoliuren"
   method    String
-  // User's original question
   question  String
-  // Full result in JSON format
   result    String
-  // Timestamp of divination
   createdAt DateTime @default(now())
+  codeId    String?
+  code      RedemptionCode? @relation(fields: [codeId], references: [id])
 
   @@index([method])
   @@index([createdAt])
+  @@index([codeId])
   @@map("divination_records")
+}
+
+// Payment orders from WeChat Pay
+model PaymentOrder {
+  id          String   @id @default(cuid())
+  orderNo     String   @unique
+  amount      Int      // amount in yuan (1 = 1 yuan)
+  turnCount   Int      // how many turns this purchase gives
+  status      String   @default("pending") // pending | paid | expired
+  paidAt      DateTime?
+  createdAt   DateTime @default(now())
+  code        RedemptionCode?
+
+  @@index([orderNo])
+  @@index([status])
+  @@map("payment_orders")
+}
+
+// Redemption codes (取次码)
+model RedemptionCode {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  totalTurns  Int      @default(1)
+  usedTurns   Int      @default(0)
+  status      String   @default("active") // active | exhausted | expired
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime?
+  paymentId   String?  @unique
+  payment     PaymentOrder? @relation(fields: [paymentId], references: [id])
+  records     DivinationRecord[]
+
+  @@index([code])
+  @@index([status])
+  @@map("redemption_codes")
 }
