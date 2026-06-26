@@ -10,12 +10,12 @@ export const metadata: Metadata = {
     template: "%s | Hidden Mandate",
   },
   description:
-    "Traditional Chinese divination platform offering Meihua Yishu (Plum Blossom Divination) and Xiao Liu Ren divination. Ancient wisdom for modern decisions.",
+    "Traditional Chinese divination platform offering Meihua Yishu (Plum Blossom Divination) and Xiao Liu Ren divination. Hidden Mandate - Decode the Ancient Wisdom.",
   keywords: ["\u6885\u82b1\u6613\u6570", "\u5c0f\u516d\u58ec", "\u5360\u535c", "\u6613\u7ecf", "traditional chinese divination", "plum blossom divination"],
   authors: [{ name: "Hidden Mandate" }],
   openGraph: {
     title: "Hidden Mandate",
-    description: "Decode the Ancient Wisdom - Traditional Chinese Divination",
+    description: "Hidden Mandate - Decode the Ancient Wisdom",
     type: "website",
     locale: "zh_CN",
     siteName: "Hidden Mandate",
