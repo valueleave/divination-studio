@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://divination-studio.vercel.app';
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://hidden-mandate.vercel.app';
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
